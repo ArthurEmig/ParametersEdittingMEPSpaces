@@ -25,6 +25,15 @@ family_instance_parameters = []
 family_instance_parameters_names = []
 params_names_vs_params_objs_dict = {}
 
+def isMEPInstanceInSpace(MEPInstance_elem, space_elem):
+
+    mep_instance_space_id = MEPInstance_elem.Space.Id
+    space_id = space_elem.Id
+
+    return mep_instance_space_id == space_id
+
+
+
 class FamilySelectionWindow(Windows.Window):
 
     def __init__(self):
@@ -176,6 +185,8 @@ class ParameterPairsSelectionWindow(Windows.Window):
         
 
     def btn_ok_clicked(self, sender, e):
+
+
         
         
         self.Close()
