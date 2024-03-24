@@ -54,15 +54,7 @@ class FamilySelectionWindow(Windows.Window):
             print(self.selected_value)
         else:
             print("No Item Selected")
-        collector = DB.FilteredElementCollector(doc).OfClass(db.FamilySymbol).ToElements()
-        selected_family_symbol = next((fs for fs in collector if fs.Family.Name == self.selected_value), None)
 
-        if selected_family_symbol:
-            # Get all parameters of the family symbol
-            parameters = selected_family_symbol.Parameters
-            print("Parameters:")
-            for parameter in parameters:
-                print(parameter.Definition.Name)
 
 
 
@@ -188,6 +180,71 @@ class ParameterPairsSelectionWindow(Windows.Window):
         
         self.Close()
 
+    
+    def combobox_item_spaces_1_SelectionChanged(self, sender, e):
+        selected_item = self.combo_parameter_from_space_1.SelectedItem
+        if selected_item:
+            self.selected_value_space_1 = selected_item.Content
+            print(self.selected_value)
+        else:
+            print("No Item Selected")
+    
+    def combobox_item_spaces_2_SelectionChanged(self, sender, e):
+        selected_item = self.combo_parameter_from_space_2.SelectedItem
+        if selected_item:
+            self.selected_value_space_2 = selected_item.Content
+            print(self.selected_value)
+        else:
+            print("No Item Selected")
+
+    def combobox_item_spaces_3_SelectionChanged(self, sender, e):
+        selected_item = self.combo_parameter_from_space_3.SelectedItem
+        if selected_item:
+            self.selected_value_space_3 = selected_item.Content
+            print(self.selected_value)
+        else:
+            print("No Item Selected")
+    
+    def combobox_item_spaces_4_SelectionChanged(self, sender, e):
+        selected_item = self.combo_parameter_from_space_4.SelectedItem
+        if selected_item:
+            self.selected_value_space_4 = selected_item.Content
+            print(self.selected_value)
+        else:
+            print("No Item Selected")
+
+
+    def combobox_item_MEP_1_SelectionChanged(self, sender, e):
+        selected_item = self.combo_param_to_1.SelectedItem
+        if selected_item:
+            self.selected_value_MEP_Instance_1 = selected_item.Content
+            print(self.selected_value)
+        else:
+            print("No Item Selected")
+
+    def combobox_item_MEP_2_SelectionChanged(self, sender, e):
+        selected_item = self.combo_param_to_2.SelectedItem
+        if selected_item:
+            self.selected_value_MEP_Instance_2 = selected_item.Content
+            print(self.selected_value)
+        else:
+            print("No Item Selected")
+
+    def combobox_item_MEP_3_SelectionChanged(self, sender, e):
+        selected_item = self.combo_param_to_3.SelectedItem
+        if selected_item:
+            self.selected_value_MEP_Instance_3 = selected_item.Content
+            print(self.selected_value)
+        else:
+            print("No Item Selected")
+
+    def combobox_item_MEP_4_SelectionChanged(self, sender, e):
+        selected_item = self.combo_param_to_4.SelectedItem
+        if selected_item:
+            self.selected_value_MEP_Instance_4 = selected_item.Content
+            print(self.selected_value)
+        else:
+            print("No Item Selected")
     
     
 
