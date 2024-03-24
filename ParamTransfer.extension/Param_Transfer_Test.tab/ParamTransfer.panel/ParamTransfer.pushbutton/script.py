@@ -74,6 +74,8 @@ class ParameterPairsSelectionWindow(Windows.Window):
 
         self.selected_value = selected_value
 
+        self.selected_family_instances_list = []
+
         self.selected_value_space_1 = None
         self.selected_value_MEP_Instance_1 = None
 
@@ -140,6 +142,8 @@ class ParameterPairsSelectionWindow(Windows.Window):
                     family_instance_collector = DB.FilteredElementCollector(doc).WherePasses(family_instance_filter)
                     my_family_instances = family_instance_collector.ToElements()
 
+                    self.selected_family_instances_list = my_family_instances
+
                     family_instances_of_selected_family += my_family_instances
 
                     for family_instance in my_family_instances:
@@ -186,7 +190,20 @@ class ParameterPairsSelectionWindow(Windows.Window):
 
     def btn_ok_clicked(self, sender, e):
 
+        counter_matches = 0
 
+        for space_elem in self.spaces_elements:
+            for MEP_instance in self.selected_family_instances_list:
+                
+                phase = list(doc.Phases)[-1]  # retrieve the last phase of the project
+                print("MEP Instance Space type: {}".format(type(MEP_instance.Space[phase])))
+                mep_location_space_id = MEP_instance.Space[phase].Id
+                space_elem_id = space_elem.Id
+                if mep_location_space_id == space_elem_id:
+                    counter_matches += 1
+                    print("Match")
+                    pass
+        print("Number of matches: {}". format(counter_matches))
         
         
         self.Close()
