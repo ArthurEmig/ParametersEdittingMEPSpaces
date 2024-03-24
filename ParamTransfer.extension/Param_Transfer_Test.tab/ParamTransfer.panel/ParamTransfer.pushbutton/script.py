@@ -85,23 +85,50 @@ class ParameterPairsSelectionWindow(Windows.Window):
         self.selected_value_space_4 = None
         self.selected_value_MEP_Instance_4 = None
         # Find the Family object corresponding to the "MyFamily" family
-        family_name = self.selected_value # Replace "MyFamily" with the actual name of your family
+        MEP_family_name = self.selected_value # Replace "MyFamily" with the actual name of your family
         family_collector = DB.FilteredElementCollector(doc).OfClass(DB.Family)
-        my_families = [f for f in family_collector if f.Name == family_name]
+        spaces_collector = DB.FilteredElementCollector(doc).OfClass(DB.SpatialElement)
+        MEP_families = [f for f in family_collector if f.Name == MEP_family_name]
+        spatial_elements = spaces_collector.ToElements()
+       
+        for spatial_family in spatial_elements:
+            print("Spatial Element Type {}".format(spatial_family.SpatialElementType))
+        spaces_elements = [spatial_elem for spatial_elem in spatial_elements if spatial_elem.SpatialElementType == DB.SpatialElementType.Space]
+        print("So many spaces: {}".format(len(spaces_elements)))
+
+        # populate Combo Boxes for Spaces
+        self.spaces_params = list(spaces_elements[0].GetOrderedParameters())
+        for space_param in self.spaces_params:
+            space_param_name = space_param.Definition.Name
+            combobox_item_spaces_1 = ComboBoxItem()
+            combobox_item_spaces_2 = ComboBoxItem()
+            combobox_item_spaces_3 = ComboBoxItem()
+            combobox_item_spaces_4 = ComboBoxItem()
+            combobox_item_spaces_1.Content = space_param_name
+            combobox_item_spaces_2.Content = space_param_name
+            combobox_item_spaces_3.Content = space_param_name
+            combobox_item_spaces_4.Content = space_param_name
+            self.combo_parameter_from_space_1.Items.Add(combobox_item_spaces_1)
+            self.combo_parameter_from_space_2.Items.Add(combobox_item_spaces_2)
+            self.combo_parameter_from_space_3.Items.Add(combobox_item_spaces_3)
+            self.combo_parameter_from_space_4.Items.Add(combobox_item_spaces_4)
+
 
         
 
-        if my_families:
-            for my_family in my_families:
-            # Get the ElementId of the "MyFamily" family
-                family_ids = list(my_family.GetFamilySymbolIds())
+        
 
-                print(type(family_ids))
-                print(family_ids)
+        if MEP_families:
+            for MEP_family in MEP_families:
+            # Get the ElementId of the "MyFamily" family
+                family_ids = list(MEP_family.GetFamilySymbolIds())
+
+                # print(type(family_ids))
+                # print(family_ids)
 
                 elem_symbol = doc.GetElement(family_ids[0])
 
-                print("Symbol: ", type(elem_symbol))
+                # print("Symbol: ", type(elem_symbol))
                 family_instances_of_selected_family = []
 
                 # Define the filter for FamilyInstances of the "MyFamily" family
@@ -126,8 +153,8 @@ class ParameterPairsSelectionWindow(Windows.Window):
                                 else:
                                     temp_list_params = params_names_vs_params_objs_dict[param_name]
                                     temp_list_params.append(param)
-                                family_instance_parameters.append(param)
-                                params_names_vs_params_objs_dict[param_name] = temp_list_params
+                                    params_names_vs_params_objs_dict[param_name] = temp_list_params
+                                
 
                                 # Populate Combo Boxes
                                 if param_name not in family_instance_parameters_names:
