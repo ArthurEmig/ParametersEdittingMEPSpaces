@@ -87,18 +87,30 @@ class ParameterPairsSelectionWindow(Windows.Window):
 
         self.selected_value_space_4 = None
         self.selected_value_MEP_Instance_4 = None
-        # Find the Family object corresponding to the "MyFamily" family
-        MEP_family_name = self.selected_value # Replace "MyFamily" with the actual name of your family
+
+        MEP_family_name = self.selected_value
+        # Collect all Families in the Document
         family_collector = DB.FilteredElementCollector(doc).OfClass(DB.Family)
+        # Collect all Spaces and Rooms in the Active View
         spaces_collector = DB.FilteredElementCollector(doc, doc.ActiveView.Id).OfClass(DB.SpatialElement)
-        for f in family_collector:
-            print("Family_Name: ".format(f.Name))
-        print("Family Collector", list(family_collector.ToElements()))
+
+        # # DeBugging (commented)
+        # for f in family_collector:
+        #     print("Family_Name: ".format(f.Name))
+        # print("Family Collector", list(family_collector.ToElements()))
+
+        # Collect only Families which were selected from Combo Box in the First Popup Window
         MEP_families = [f for f in family_collector if f.Name == MEP_family_name]
+
+        # Transform Filtered Collector to Elements
         spatial_elements = spaces_collector.ToElements()
        
-        for spatial_family in spatial_elements:
-            print("Spatial Element Type {}".format(spatial_family.SpatialElementType))
+
+        # # DeBugging (commented)
+        # for spatial_family in spatial_elements:
+        #     print("Spatial Element Type {}".format(spatial_family.SpatialElementType))
+
+        # separate Spaces from Rooms
         self.spaces_elements = [spatial_elem for spatial_elem in spatial_elements if spatial_elem.SpatialElementType == DB.SpatialElementType.Space]
         print("So many spaces: {}".format(len(self.spaces_elements)))
 
@@ -120,42 +132,38 @@ class ParameterPairsSelectionWindow(Windows.Window):
                 self.combo_parameter_from_space_3.Items.Add(combobox_item_spaces_3)
                 self.combo_parameter_from_space_4.Items.Add(combobox_item_spaces_4)
         else:
-            print("No spaces elements. Somethin went wrong. EXIT PROGRAM")
+            print("No spaces elements. Something went wrong. EXIT PROGRAM")
             self.Close()
 
 
-        
-
-        
-
         if MEP_families:
             for MEP_family in MEP_families:
-            # Get the ElementId of the "MyFamily" family
+                # Get the ElementId of the selected family
                 family_ids = list(MEP_family.GetFamilySymbolIds())
 
+                # # DeBugging (commented)
                 # print(type(family_ids))
                 # print(family_ids)
 
-                elem_symbol = doc.GetElement(family_ids[0])
-
-                # print("Symbol: ", type(elem_symbol))
                 family_instances_of_selected_family = []
 
-                # Define the filter for FamilyInstances of the "MyFamily" family
+                # Define the filter for FamilyInstances of the selected family
                 for family_id in family_ids:
+
+                    # setup family instance filter, it uses FamilySymbolIds
                     family_instance_filter = DB.FamilyInstanceFilter(doc, family_id)
 
-                    # Get all family instances of the "MyFamily" family
+                    # Get all family instances of the selected family
                     family_instance_collector = DB.FilteredElementCollector(doc).WherePasses(family_instance_filter)
-                    my_family_instances = family_instance_collector.ToElements()
+                    mep_family_Instances = family_instance_collector.ToElements()
 
-                    self.selected_family_instances_list = my_family_instances
+                    self.selected_family_instances_list = mep_family_Instances
 
-                    family_instances_of_selected_family += my_family_instances
+                    family_instances_of_selected_family += mep_family_Instances
 
-                    print("Len Family Instancies MEP: {}".format(len(my_family_instances)))
+                    print("Len Family Instancies MEP: {}".format(len(mep_family_Instances)))
 
-                    for family_instance in my_family_instances:
+                    for family_instance in mep_family_Instances:
                         for param in family_instance.Parameters:
                             if param not in family_instance_parameters:
                                 param_name = param.Definition.Name
@@ -189,7 +197,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
                     # print("So many Instances of {}: {} ".format(family_id, len(my_family_instances)))
 
                 # Now you can process the family instances as needed
-                for my_family_instance in my_family_instances:
+                for my_family_instance in mep_family_Instances:
                     # Do something with each family instance
                     pass
         else:
