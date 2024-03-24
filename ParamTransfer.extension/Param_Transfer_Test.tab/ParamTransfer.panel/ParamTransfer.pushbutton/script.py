@@ -90,7 +90,10 @@ class ParameterPairsSelectionWindow(Windows.Window):
         # Find the Family object corresponding to the "MyFamily" family
         MEP_family_name = self.selected_value # Replace "MyFamily" with the actual name of your family
         family_collector = DB.FilteredElementCollector(doc).OfClass(DB.Family)
-        spaces_collector = DB.FilteredElementCollector(doc).OfClass(DB.SpatialElement)
+        spaces_collector = DB.FilteredElementCollector(doc, doc.ActiveView.Id).OfClass(DB.SpatialElement)
+        for f in family_collector:
+            print("Family_Name: ".format(f.Name))
+        print("Family Collector", list(family_collector.ToElements()))
         MEP_families = [f for f in family_collector if f.Name == MEP_family_name]
         spatial_elements = spaces_collector.ToElements()
        
@@ -100,21 +103,25 @@ class ParameterPairsSelectionWindow(Windows.Window):
         print("So many spaces: {}".format(len(self.spaces_elements)))
 
         # populate Combo Boxes for Spaces
-        self.spaces_params = list(self.spaces_elements[0].GetOrderedParameters())
-        for space_param in self.spaces_params:
-            space_param_name = space_param.Definition.Name
-            combobox_item_spaces_1 = ComboBoxItem()
-            combobox_item_spaces_2 = ComboBoxItem()
-            combobox_item_spaces_3 = ComboBoxItem()
-            combobox_item_spaces_4 = ComboBoxItem()
-            combobox_item_spaces_1.Content = space_param_name
-            combobox_item_spaces_2.Content = space_param_name
-            combobox_item_spaces_3.Content = space_param_name
-            combobox_item_spaces_4.Content = space_param_name
-            self.combo_parameter_from_space_1.Items.Add(combobox_item_spaces_1)
-            self.combo_parameter_from_space_2.Items.Add(combobox_item_spaces_2)
-            self.combo_parameter_from_space_3.Items.Add(combobox_item_spaces_3)
-            self.combo_parameter_from_space_4.Items.Add(combobox_item_spaces_4)
+        if self.spaces_elements:
+            self.spaces_params = list(self.spaces_elements[0].GetOrderedParameters())
+            for space_param in self.spaces_params:
+                space_param_name = space_param.Definition.Name
+                combobox_item_spaces_1 = ComboBoxItem()
+                combobox_item_spaces_2 = ComboBoxItem()
+                combobox_item_spaces_3 = ComboBoxItem()
+                combobox_item_spaces_4 = ComboBoxItem()
+                combobox_item_spaces_1.Content = space_param_name
+                combobox_item_spaces_2.Content = space_param_name
+                combobox_item_spaces_3.Content = space_param_name
+                combobox_item_spaces_4.Content = space_param_name
+                self.combo_parameter_from_space_1.Items.Add(combobox_item_spaces_1)
+                self.combo_parameter_from_space_2.Items.Add(combobox_item_spaces_2)
+                self.combo_parameter_from_space_3.Items.Add(combobox_item_spaces_3)
+                self.combo_parameter_from_space_4.Items.Add(combobox_item_spaces_4)
+        else:
+            print("No spaces elements. Somethin went wrong. EXIT PROGRAM")
+            self.Close()
 
 
         
@@ -145,6 +152,8 @@ class ParameterPairsSelectionWindow(Windows.Window):
                     self.selected_family_instances_list = my_family_instances
 
                     family_instances_of_selected_family += my_family_instances
+
+                    print("Len Family Instancies MEP: {}".format(len(my_family_instances)))
 
                     for family_instance in my_family_instances:
                         for param in family_instance.Parameters:
@@ -184,7 +193,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
                     # Do something with each family instance
                     pass
         else:
-            print("Family 'MyFamily' not found.")
+            print("Family {} not found.".format(MEP_family_name))
 
         
 
@@ -327,7 +336,7 @@ if __name__ == "__main__":
     uidoc = HOST_APP.uidoc
     filtered_collector = DB.FilteredElementCollector(doc)
 
-    # all_MEPFamilyTypes = DB.FilteredElementCollector(doc).OfCategory(db.BuiltInCategory.OST_DuctAccessory).ToElements()
+    # all_MEPFamilyTypes = DB.FilteredElementCollector(doc, doc.ActiveView.Id).OfCategory(db.BuiltInCategory.OST_DuctAccessory).ToElements()
 
     # all_MEP_family_types = filtered_collector.OfClass(db.FamilySymbol).ToElements()
 
