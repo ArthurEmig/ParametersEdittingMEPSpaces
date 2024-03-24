@@ -196,8 +196,12 @@ class ParameterPairsSelectionWindow(Windows.Window):
             MEP_parameter = MEP_instance.LookupParameter(MEP_instance_parameter_name)
 
             if (MEP_parameter is not None) and (space_parameter is not None):
-                with revit.Transaction("Param transfer CUSTOM"):
-                    MEP_parameter.Set(str(space_parameter.AsDouble()))
+                t = DB.Transaction(doc, "Param transfer CUSTOM")
+                t.Start()
+                print("Transaction fire up: MEP instance param: {}; space param: {}".format(MEP_instance_parameter_name, space_parameter_name))
+                MEP_parameter.Set(space_parameter.AsValueString())
+                t.Commit()
+                print("Transaction committed")
             else:
                 print("MEP and/or space parameter do not exist")
         else:
