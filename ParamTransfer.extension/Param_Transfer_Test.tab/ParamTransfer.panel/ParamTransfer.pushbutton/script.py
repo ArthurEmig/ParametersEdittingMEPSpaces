@@ -196,11 +196,10 @@ class ParameterPairsSelectionWindow(Windows.Window):
             MEP_parameter = MEP_instance.LookupParameter(MEP_instance_parameter_name)
 
             if (MEP_parameter is not None) and (space_parameter is not None):
-                t = DB.Transaction(doc, "Param transfer CUSTOM")
-                t.Start()
+                
                 print("Transaction fire up: MEP instance param: {}; space param: {}".format(MEP_instance_parameter_name, space_parameter_name))
                 MEP_parameter.Set(space_parameter.AsValueString())
-                t.Commit()
+                
                 print("Transaction committed")
             else:
                 print("MEP and/or space parameter do not exist")
@@ -212,6 +211,9 @@ class ParameterPairsSelectionWindow(Windows.Window):
     def btn_ok_clicked(self, sender, e):
 
         counter_matches = 0
+
+        t = DB.Transaction(doc, "Param transfer CUSTOM")
+        t.Start()
 
         for space_elem in self.spaces_elements:
             for MEP_instance in self.selected_family_instances_list:
@@ -239,6 +241,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
                                              space_parameter_name=self.selected_value_space_4, 
                                              MEP_instance_parameter_name=self.selected_value_MEP_Instance_4)
                     # print("Match")
+        t.Commit()
                     
         # print("Number of matches: {}". format(counter_matches))
         
