@@ -1,0 +1,126 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Config Manager"
+        Height="400"
+        Width="800"
+        MinWidth="800"
+        MinHeight="300"
+        MaxWidth="1600"
+        MaxHeight="1200"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <Style TargetType="ContentControl"
+               x:Key="control">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Content}"
+                             Value="{x:Null}">
+                    <Setter Property="ContentControl.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Grid HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="#FF929292">Select or create one config to start...</TextBlock>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top"
+                   VerticalAlignment="Top"
+                   Margin="5,5,5,5"
+                   MaxWidth="800"
+                   >
+            <DockPanel.Resources>
+                <Style TargetType="{x:Type Control}">
+                    <Setter Property="Margin"
+                            Value="20,5,20,5" />
+                </Style>
+                <Style TargetType="Button">
+                    <Setter Property="FontFamily"
+                            Value="Calibri" />
+                    <Setter Property="FontSize"
+                            Value="12" />
+                    <Setter Property="Height"
+                            Value="24" />
+                    <Setter Property="Padding"
+                            Value="2,0"></Setter>
+                    <Setter Property="Margin"
+                            Value="5,0" />
+                    <Setter Property="BorderThickness"
+                            Value="0" />
+                    <Setter Property="Background"
+                            Value="Transparent" />
+                    <Setter Property="HorizontalContentAlignment"
+                            Value="Stretch"></Setter>
+                    <Setter Property="VerticalContentAlignment"
+                            Value="Stretch"></Setter>
+                </Style>
+            </DockPanel.Resources>
+            <Label DockPanel.Dock="Left" Content="Config File" />
+
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <Button ToolTip="Rename"
+                        x:Name="btn_rename"
+                        Click="btn_rename_click">
+                    <Image Stretch="Fill">
+                        <Image.Source>
+                            <BitmapImage UriSource="icons/rename.png" />
+                        </Image.Source>
+                    </Image>
+                </Button>
+                <Button x:Name="btn_delete"
+                        ToolTip="Delete Config"
+                        Click="btn_delete_click">
+                    <Image Stretch="Fill">
+                        <Image.Source>
+                            <BitmapImage UriSource="icons/delete.png" />
+                        </Image.Source>
+                    </Image>
+                </Button>
+                <Button x:Name="btn_create"
+                        ToolTip="New Config"
+                        Click="btn_create_click">
+                    <Image Stretch="Fill">
+                        <Image.Source>
+                            <BitmapImage UriSource="icons/add.png" />
+                        </Image.Source>
+                    </Image>
+                </Button>
+                <Button x:Name="btn_select_folder"
+                        ToolTip="Select Folder"
+                        Click="btn_select_folder_click">
+                    <Image Stretch="Fill">
+                        <Image.Source>
+                            <BitmapImage UriSource="icons/folder.png" />
+                        </Image.Source>
+                    </Image>
+                </Button>
+                <Button x:Name="btn_open_folder"
+                        ToolTip="Open Config Folder in Explorer"
+                        Click="btn_open_folder_click">
+                    <Image Stretch="Fill">
+                        <Image.Source>
+                            <BitmapImage UriSource="icons/open.png" />
+                        </Image.Source>
+                    </Image>
+                </Button>
+            </StackPanel>
+
+            <ComboBox x:Name="combo_config"
+                      MinWidth="400"
+                      IsSynchronizedWithCurrentItem="True" />
+        </DockPanel>
+
+        <UserControl x:Name="control_operation_set"
+                     Style="{StaticResource control}" />
+    </DockPanel>
+</Window>

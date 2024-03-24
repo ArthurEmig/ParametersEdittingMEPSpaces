@@ -1,0 +1,406 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="408.28"
+             d:DesignWidth="918.96"
+             Background="White">
+    <UserControl.Resources>
+        <Style x:Name="BasicButtonStyle"
+               TargetType="Button">
+            <Setter Property="Padding"
+                    Value="30,5,30,5" />
+            <Setter Property="Margin"
+                    Value="10,5,10,5" />
+        </Style>
+        <Style TargetType="ContentControl"
+               x:Key="control">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Content}"
+                             Value="{x:Null}">
+                    <Setter Property="ContentControl.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Grid HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="#FF929292">Select or create one operation to start...</TextBlock>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <DockPanel>
+        <Border DockPanel.Dock="Bottom"
+                Background="#FFF4F4F4"
+                Padding="0,5,30,5">
+            <StackPanel DockPanel.Dock="Bottom"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button x:Name="btn_apply"
+                        Click="btn_apply_click"
+                        Content="Apply" />
+                <!--
+                         <Button x:Name="btn_reset" Click="btn_reset_click" Content="Reset"/>
+                        -->
+                <Button x:Name="btn_cancel"
+                        Click="btn_cancel_click"
+                        Content="Close" />
+            </StackPanel>
+        </Border>
+
+        <GroupBox x:Name="grp_cfg_info"
+                  DockPanel.Dock="Top"
+                  Header="Config Description"
+                  Margin="5,5,5,5"
+                  BorderBrush="{x:Null}"
+                  Visibility="Collapsed">
+            <TextBox x:Name="tb_cfg_desc"
+                     MinWidth="300"
+                     MinHeight="40">
+            </TextBox>
+        </GroupBox>
+
+        <Border BorderBrush="#4C000000"
+                BorderThickness="1,1,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"
+                                      MinWidth="300" />
+                    <ColumnDefinition Width="3*"
+                                      MinWidth="300" />
+                </Grid.ColumnDefinitions>
+                <Border BorderThickness="0,0,1,0"
+                        BorderBrush="#4C000000"
+                        Padding="5,5,5,5">
+                    <DockPanel Grid.Column="0">
+
+                        <DockPanel.Resources>
+                            <Style TargetType="Button">
+                                <Setter Property="Padding"
+                                        Value="80,5" />
+                                <Setter Property="Margin"
+                                        Value="3" />
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#FFEBEBEB"
+                                                         Opacity="0.5" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="BorderThickness"
+                                        Value="0.6"></Setter>
+                            </Style>
+
+                        </DockPanel.Resources>
+                        <Label x:Name="lb_operation"
+                               DockPanel.Dock="Top"
+                               Content="QA Scenarios"
+                               HorizontalAlignment="Center"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Margin="-3,-3,0,5" />
+                        <StackPanel DockPanel.Dock="Bottom"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+                            <Button x:Name="btn_tree_add"
+                                    Click="btn_tree_add_click"
+                                    FontFamily="Arial">
+                                <Button.Content>
+                                    <TextBlock TextAlignment="Center"
+                                               FontSize="12">
+                                    <Run FontWeight="ExtraBlack">
+                                        +
+                                    </Run>
+                                    <Run>
+                                        New
+                                    </Run>
+                                    </TextBlock>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                        <ListBox x:Name="treeview_operation"
+                                 BorderThickness="0"
+                                 Margin="3"
+                                 Background="Transparent"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment"
+                                            Value="Stretch"></Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"
+                                                              MaxWidth="300"></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Margin"
+                                                        Value="2,0,2,0" />
+                                                <Setter Property="TextTrimming"
+                                                        Value="CharacterEllipsis" />
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Visibility"
+                                                        Value="Visible" />
+                                                <Setter Property="Padding"
+                                                        Value="5,2,5,2" />
+                                                <Setter Property="Margin"
+                                                        Value="2,0,2,0" />
+                                                <Setter Property="BorderThickness"
+                                                        Value="0" />
+                                                <Setter Property="Background"
+                                                        Value="Transparent" />
+                                                <Setter Property="FontWeight"
+                                                        Value="Medium" />
+                                                <Setter Property="FontFamily"
+                                                        Value="Arial" />
+                                                <Setter Property="FontSize"
+                                                        Value="14" />
+                                                <Setter Property="Height"
+                                                        Value="20" />
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                                                       Value="False" />
+                                                            <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                                                       Value="False" />
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Visibility"
+                                                                Value="Hidden" />
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+
+                                            </Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Height"
+                                                        Value="18"/>
+                                            </Style>
+                                        </Grid.Resources>
+                                        <!--
+                                        <TextBlock FontWeight="Bold">
+                                            <TextBlock.Text>
+                                                <Binding
+                                                    RelativeSource='{RelativeSource AncestorType=ListBoxItem}'
+                                                    Path="(ItemsControl.AlternationIndex)"
+                                                    StringFormat="{}{0}."
+                                                />
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        -->
+                                        <TextBlock Grid.Column="0"
+                                                   FontWeight="Bold"
+                                                   TextTrimming="CharacterEllipsis">
+                                            <TextBlock.Text>
+                                                <Binding Path="name" />
+                                            </TextBlock.Text>
+                                            <TextBlock.ToolTip>
+                                                <Binding Path="name" />
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                        <TextBlock Grid.Column="1"
+                                                   TextTrimming="CharacterEllipsis">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat=" {0}+{1}">
+                                                    <Binding Path="collector.name" />
+                                                    <Binding Path="analyzer.name" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                            <TextBlock.ToolTip>
+                                                <MultiBinding StringFormat=" {0}+{1}">
+                                                    <Binding Path="collector.name" />
+                                                    <Binding Path="analyzer.name" />
+                                                </MultiBinding>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Stretch"
+                                                    DockPanel.Dock="Right"
+                                                    Grid.Column="2">
+                                            <Button Tag="{Binding}"
+                                                    Click="btn_tree_rename_click"
+                                                    HorizontalContentAlignment="Stretch"
+                                                    VerticalContentAlignment="Stretch"
+                                                    ToolTip="Rename">
+                                                <Image Stretch="Fill">
+                                                    <Image.Source>
+                                                        <BitmapImage UriSource="icons/rename.png" />
+                                                    </Image.Source>
+                                                </Image>
+                                            </Button>
+                                            <Button Tag="{Binding}"
+                                                    Click="btn_tree_move_up_click"
+                                                    ToolTip="Move Up">
+                                                👆
+                                            </Button>
+                                            <Button Tag="{Binding}"
+                                                    Click="btn_tree_move_down_click"
+                                                    ToolTip="Move Down">
+                                                👇
+                                            </Button>
+                                            <Button Tag="{Binding}"
+                                                    Click="btn_tree_del_click"
+                                                    ToolTip="Delete">
+                                                ❌
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                    </DockPanel>
+                </Border>
+
+                <DockPanel Grid.Column="1"
+                           Margin="5,0">
+                    <DockPanel.Style>
+                        <Style TargetType="DockPanel">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed">
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=treeview_operation, Path=SelectedItem}"
+                                             Value="{x:Null}">
+                                    <Setter Property="Visibility"
+                                            Value="Visible"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DockPanel.Style>
+                    <Label HorizontalContentAlignment="Center"
+                           VerticalContentAlignment="Center">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.GrayTextColorKey}}" />
+                        </Label.Foreground>
+                        Select a scenario to start...
+                    </Label>
+                </DockPanel>
+
+                <ScrollViewer Grid.Column="1"
+                              VerticalScrollBarVisibility="Auto">
+                    <StackPanel 
+                                x:Name="stackpanel_op_settings"
+                                Margin="5,0">
+                        <StackPanel.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=treeview_operation, Path=SelectedItem}"
+                                                 Value="{x:Null}">
+                                        <Setter Property="StackPanel.Visibility"
+                                                Value="Collapsed"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <StackPanel.Resources>
+                            <Style TargetType="Label">
+                                <Setter Property="FontWeight"
+                                        Value="Medium" />
+                                <Setter Property="FontSize"
+                                        Value="13" />
+                                <Setter Property="Margin"
+                                        Value="0,10,0,2"></Setter>
+                            </Style>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="VerticalAlignment"
+                                        Value="Center"></Setter>
+                                <Setter Property="Padding"
+                                        Value="0,3"></Setter>
+                                <Setter Property="DisplayMemberPath"
+                                        Value="[NAME]"></Setter>
+
+                            </Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Margin"
+                                        Value="5,0"></Setter>
+                                <Setter Property="Padding"
+                                        Value="10,3"></Setter>
+                            </Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Margin"
+                                        Value="2,4,2,5"></Setter>
+                                <Setter Property="FontSize"
+                                        Value="12"></Setter>
+                                <Setter Property="FontStyle"
+                                        Value="Italic"></Setter>
+                                <Setter Property="Foreground">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="{StaticResource {x:Static SystemColors.GrayTextColorKey}}" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="TextWrapping"
+                                        Value="Wrap"></Setter>
+                            </Style>
+                        </StackPanel.Resources>
+                        <Label>
+                            1. View Selection
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="combo_scope_selector"
+                                      IsEditable="True" />
+                            <Button Grid.Column="1"
+                                    x:Name="btn_advance_scope_selector"
+                                    Click="btn_advance_scope_selector_click"
+                                    IsEnabled="False">Advance</Button>
+                        </Grid>
+                        <TextBlock x:Name="tb_desc_scope_selector"></TextBlock>
+                        <Label>
+                            2. Element Selection
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="combo_collector"
+                                      IsEditable="True" />
+                            <Button Grid.Column="1"
+                                    x:Name="btn_advance_collector"
+                                    Click="btn_advance_collector_click"
+                                    IsEnabled="False">Advance</Button>
+                        </Grid>
+                        <TextBlock x:Name="tb_desc_collector"></TextBlock>
+                        <Label>
+                            3. Analyzer
+                        </Label>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="combo_analyzer"
+                                      IsEditable="True" />
+                            <Button Grid.Column="1"
+                                    x:Name="btn_advance_analyzer"
+                                    IsEnabled="False"
+                                    Click="btn_advance_analyzer_click">Advance</Button>
+                        </Grid>
+                        <TextBlock x:Name="tb_desc_analyzer"></TextBlock>
+                    </StackPanel>
+
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+
+    </DockPanel>
+</UserControl>
