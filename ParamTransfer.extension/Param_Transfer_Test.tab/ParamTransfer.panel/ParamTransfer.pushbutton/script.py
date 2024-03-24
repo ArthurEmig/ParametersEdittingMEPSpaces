@@ -188,6 +188,23 @@ class ParameterPairsSelectionWindow(Windows.Window):
 
         
 
+    def transfer_parameters(self, space_elem, MEP_instance, space_parameter_name, MEP_instance_parameter_name):
+
+        if space_parameter_name is not None and MEP_instance_parameter_name is not None:
+
+            space_parameter = space_elem.LookupParameter(space_parameter_name)
+            MEP_parameter = MEP_instance.LookupParameter(MEP_instance_parameter_name)
+
+            if (MEP_parameter is not None) and (space_parameter is not None):
+                with revit.Transaction("Param transfer CUSTOM"):
+                    MEP_parameter.Set(str(space_parameter.AsDouble()))
+            else:
+                print("MEP and/or space parameter do not exist")
+        else:
+            print("Parameter not filled")
+
+
+
     def btn_ok_clicked(self, sender, e):
 
         counter_matches = 0
@@ -196,14 +213,30 @@ class ParameterPairsSelectionWindow(Windows.Window):
             for MEP_instance in self.selected_family_instances_list:
                 
                 phase = list(doc.Phases)[-1]  # retrieve the last phase of the project
-                print("MEP Instance Space type: {}".format(type(MEP_instance.Space[phase])))
+                # print("MEP Instance Space type: {}".format(type(MEP_instance.Space[phase])))
                 mep_location_space_id = MEP_instance.Space[phase].Id
                 space_elem_id = space_elem.Id
                 if mep_location_space_id == space_elem_id:
                     counter_matches += 1
-                    print("Match")
-                    pass
-        print("Number of matches: {}". format(counter_matches))
+
+                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                             space_parameter_name=self.selected_value_space_1, 
+                                             MEP_instance_parameter_name=self.selected_value_MEP_Instance_1)
+                    
+                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                             space_parameter_name=self.selected_value_space_2, 
+                                             MEP_instance_parameter_name=self.selected_value_MEP_Instance_2)
+                    
+                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                             space_parameter_name=self.selected_value_space_3, 
+                                             MEP_instance_parameter_name=self.selected_value_MEP_Instance_3)
+                    
+                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                             space_parameter_name=self.selected_value_space_4, 
+                                             MEP_instance_parameter_name=self.selected_value_MEP_Instance_4)
+                    # print("Match")
+                    
+        # print("Number of matches: {}". format(counter_matches))
         
         
         self.Close()
