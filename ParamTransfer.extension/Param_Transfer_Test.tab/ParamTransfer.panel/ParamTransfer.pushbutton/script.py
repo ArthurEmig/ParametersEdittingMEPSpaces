@@ -85,11 +85,11 @@ class ParameterPairsSelectionWindow(Windows.Window):
        
         for spatial_family in spatial_elements:
             print("Spatial Element Type {}".format(spatial_family.SpatialElementType))
-        spaces_elements = [spatial_elem for spatial_elem in spatial_elements if spatial_elem.SpatialElementType == DB.SpatialElementType.Space]
-        print("So many spaces: {}".format(len(spaces_elements)))
+        self.spaces_elements = [spatial_elem for spatial_elem in spatial_elements if spatial_elem.SpatialElementType == DB.SpatialElementType.Space]
+        print("So many spaces: {}".format(len(self.spaces_elements)))
 
         # populate Combo Boxes for Spaces
-        self.spaces_params = list(spaces_elements[0].GetOrderedParameters())
+        self.spaces_params = list(self.spaces_elements[0].GetOrderedParameters())
         for space_param in self.spaces_params:
             space_param_name = space_param.Definition.Name
             combobox_item_spaces_1 = ComboBoxItem()
