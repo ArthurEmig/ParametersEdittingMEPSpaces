@@ -1,8 +1,4 @@
 
 layout:
-  - Configuration[beforeall:]
-  - RunOperationSet
-  - ">>>"
-  - Test Operations
-  - SlopedPipesQA
   - ParamTransfer
+  
