@@ -20,6 +20,7 @@ class MyWindow(Windows.Window):
 
     def __init__(self):
         wpf.LoadComponent(self, xamlfile)
+        self.selected_value = None
 
     def btn_ok_clicked():
         pass
@@ -39,8 +40,8 @@ class MyWindow(Windows.Window):
     def comboBoxFamilyTypes_SelectionChanged(self, sender, e):
         selected_item = self.combo_family_type.SelectedItem
         if selected_item:
-            selected_value = selected_item.Content
-            print(selected_value)
+            self.selected_value = selected_item.Content
+            print(self.selected_value)
         else:
             print("No Item Selected")
         
