@@ -155,7 +155,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
                     family_instance_filter = DB.FamilyInstanceFilter(doc, family_id)
 
                     # Get all family instances of the selected family
-                    family_instance_collector = DB.FilteredElementCollector(doc).WherePasses(family_instance_filter)
+                    family_instance_collector = DB.FilteredElementCollector(doc, doc.ActiveView.Id).WherePasses(family_instance_filter)
                     mep_family_Instances = family_instance_collector.ToElements()
 
                     self.selected_family_instances_list += mep_family_Instances
