@@ -61,7 +61,7 @@ class FamilySelectionWindow(Windows.Window):
         selected_item = self.combo_family_type.SelectedItem
         if selected_item:
             self.selected_value = selected_item.Content
-            print(self.selected_value)
+            # print(self.selected_value)
         else:
             print("No Item Selected")
 
@@ -233,35 +233,51 @@ class ParameterPairsSelectionWindow(Windows.Window):
         t = DB.Transaction(doc, "Param transfer CUSTOM")
         t.Start()
 
-        for space_elem in self.spaces_elements:
-            for MEP_instance in self.selected_family_instances_list:
-                
-                phase = list(doc.Phases)[-1]  # retrieve the last phase of the project
-                # print("MEP Instance Space type: {}".format(type(MEP_instance.Space[phase])))
-                mep_location_space_id = MEP_instance.Space[phase].Id
-                space_elem_id = space_elem.Id
-                if mep_location_space_id == space_elem_id:
-                    counter_matches += 1
+        closed = False
 
-                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
-                                             space_parameter_name=self.selected_value_space_1, 
-                                             MEP_instance_parameter_name=self.selected_value_MEP_Instance_1)
+        try: 
+
+            for space_elem in self.spaces_elements:
+                for MEP_instance in self.selected_family_instances_list:
                     
-                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
-                                             space_parameter_name=self.selected_value_space_2, 
-                                             MEP_instance_parameter_name=self.selected_value_MEP_Instance_2)
+                    phase = list(doc.Phases)[-1]  # retrieve the last phase of the project
+                    # print("MEP Instance Space type: {}".format(type(MEP_instance.Space[phase])))
                     
-                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
-                                             space_parameter_name=self.selected_value_space_3, 
-                                             MEP_instance_parameter_name=self.selected_value_MEP_Instance_3)
-                    
-                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
-                                             space_parameter_name=self.selected_value_space_4, 
-                                             MEP_instance_parameter_name=self.selected_value_MEP_Instance_4)
+                    # if MEP_instance.Space[phase] is not None:
+                    #     mep_location_space_id = MEP_instance.Space[phase].Id
+                    # else:
+                    #     mep_location_space_id = MEP_instance.Space.Id
+                    mep_location_point = MEP_instance.Location.Point
+                    print("SPACE: ", space_elem)
+                    if space_elem.IsPointInSpace(mep_location_point):
+                        counter_matches += 1
+
+                        self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                                space_parameter_name=self.selected_value_space_1, 
+                                                MEP_instance_parameter_name=self.selected_value_MEP_Instance_1)
+                        
+                        self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                                space_parameter_name=self.selected_value_space_2, 
+                                                MEP_instance_parameter_name=self.selected_value_MEP_Instance_2)
+                        
+                        self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                                space_parameter_name=self.selected_value_space_3, 
+                                                MEP_instance_parameter_name=self.selected_value_MEP_Instance_3)
+                        
+                        self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                                space_parameter_name=self.selected_value_space_4, 
+                                                MEP_instance_parameter_name=self.selected_value_MEP_Instance_4)
+        except Exception as error:
+            print("ERROR: ", error)
+            t.Commit()
+            self.Close()
+            closed = True
                     # print("Match")
-        t.Commit()
+        if not closed:
+            t.Commit()
+            self.Close()
                     
-        # print("Number of matches: {}". format(counter_matches))
+        print("Number of matches: {}". format(counter_matches))
         
         
         self.Close()
@@ -271,7 +287,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
         selected_item = self.combo_parameter_from_space_1.SelectedItem
         if selected_item:
             self.selected_value_space_1 = selected_item.Content
-            print(self.selected_value)
+            
         else:
             print("No Item Selected")
     
