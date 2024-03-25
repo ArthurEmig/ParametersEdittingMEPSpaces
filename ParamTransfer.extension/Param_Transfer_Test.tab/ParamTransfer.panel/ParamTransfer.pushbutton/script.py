@@ -24,6 +24,7 @@ from System import Windows
 family_instance_parameters = []
 family_instance_parameters_names = []
 params_names_vs_params_objs_dict = {}
+family_instances_of_selected_family = []
 
 def isMEPInstanceInSpace(MEPInstance_elem, space_elem):
 
@@ -145,7 +146,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
                 # print(type(family_ids))
                 # print(family_ids)
 
-                family_instances_of_selected_family = []
+                
 
                 # Define the filter for FamilyInstances of the selected family
                 for family_id in family_ids:
@@ -157,9 +158,9 @@ class ParameterPairsSelectionWindow(Windows.Window):
                     family_instance_collector = DB.FilteredElementCollector(doc).WherePasses(family_instance_filter)
                     mep_family_Instances = family_instance_collector.ToElements()
 
-                    self.selected_family_instances_list = mep_family_Instances
+                    self.selected_family_instances_list += mep_family_Instances
 
-                    family_instances_of_selected_family += mep_family_Instances
+                    # family_instances_of_selected_family += mep_family_Instances
 
                     print("Len Family Instancies MEP: {}".format(len(mep_family_Instances)))
 
