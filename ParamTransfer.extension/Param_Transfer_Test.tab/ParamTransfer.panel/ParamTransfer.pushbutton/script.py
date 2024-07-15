@@ -8,6 +8,7 @@ from qa_report import print_reports
 import clr
 clr.AddReference('System.Windows.Forms')
 clr.AddReference('IronPython.wpf')
+import sys
 
 
 
@@ -134,6 +135,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
                 self.combo_parameter_from_space_4.Items.Add(combobox_item_spaces_4)
         else:
             print("No spaces elements. Something went wrong. EXIT PROGRAM")
+            sys.exit()
             self.Close()
 
 
