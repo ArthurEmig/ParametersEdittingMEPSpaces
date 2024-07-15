@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Select Operation" Height="150" Width="450">
+        Title="Select Operation" Height="300" Width="500">
     <Grid Margin="16,20,20,20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="43*"/>
@@ -16,7 +16,7 @@
             <RowDefinition  Height="2*"/>
         </Grid.RowDefinitions>
 
-        <Label x:Name="label_family_types" Content="MEP FamilyType" HorizontalAlignment="Left" VerticalAlignment="Center" Height="26" Width="108" Margin="8,0,0,0"/>
+        <Label x:Name="label_family_types" Content="MEP FamilyType" HorizontalAlignment="Left" VerticalAlignment="Center" Height="35" Width="130" Margin="8,0,0,0"/>
         <ComboBox SelectionChanged="comboBoxFamilyTypes_SelectionChanged" x:Name="combo_family_type" Grid.Column="1" VerticalAlignment="Center" IsEditable="True" IsSynchronizedWithCurrentItem="True" Height="22" HorizontalAlignment="Left" Width="285" />
 
         <Button x:Name="btn_ok" Click="btn_ok_clicked" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Content="OK" Padding="30,5,30,5" Margin="0,16,0,0" Grid.Column="1" Height="28" Width="78" />
