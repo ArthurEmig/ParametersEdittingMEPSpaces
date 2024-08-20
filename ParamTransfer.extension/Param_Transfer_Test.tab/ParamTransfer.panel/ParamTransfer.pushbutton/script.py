@@ -93,6 +93,8 @@ class ParameterPairsSelectionWindow(Windows.Window):
         self.selected_value_space_4 = None
         self.selected_value_MEP_Instance_4 = None
 
+        self.should_divide_by_number_MEP_elements_in_space = False
+
         MEP_family_name = self.selected_value
         # Collect all Families in the Document
         family_collector = DB.FilteredElementCollector(doc).OfClass(DB.Family)
@@ -167,7 +169,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
 
                     # family_instances_of_selected_family += mep_family_Instances
 
-                    print("Len Family Instancies MEP: {}".format(len(mep_family_Instances)))
+                    # print("Len Family Instancies MEP: {}".format(len(mep_family_Instances)))
 
                     for family_instance in mep_family_Instances:
                         for param in family_instance.Parameters:
@@ -220,7 +222,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
 
             if (MEP_parameter is not None) and (space_parameter is not None):
                 
-                print("Transaction fire up: MEP instance param: {}; space param: {}".format(MEP_instance_parameter_name, space_parameter_name))
+                # print("Transaction fire up: MEP instance param: {}; space param: {}".format(MEP_instance_parameter_name, space_parameter_name))
                 MEP_parameter.Set(space_parameter.AsValueString())
                 
                 print("Transaction committed")
@@ -352,6 +354,15 @@ class ParameterPairsSelectionWindow(Windows.Window):
             print(self.selected_value)
         else:
             print("No Item Selected")
+
+
+    def handle_checked_division_by_MEP_elem_number(self, sender, e):
+
+        self.should_divide_by_number_MEP_elements_in_space = True
+    
+    def handle_unchecked_division_by_MEP_elem_number(self, sender, e):
+
+        self.should_divide_by_number_MEP_elements_in_space = False
     
     
 
