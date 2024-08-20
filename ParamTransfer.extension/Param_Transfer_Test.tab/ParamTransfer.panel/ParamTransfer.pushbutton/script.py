@@ -359,10 +359,14 @@ class ParameterPairsSelectionWindow(Windows.Window):
     def handle_checked_division_by_MEP_elem_number(self, sender, e):
 
         self.should_divide_by_number_MEP_elements_in_space = True
+
+        # print("self.should_divide_by_number_MEP_elements_in_space: ", self.should_divide_by_number_MEP_elements_in_space)
     
     def handle_unchecked_division_by_MEP_elem_number(self, sender, e):
 
         self.should_divide_by_number_MEP_elements_in_space = False
+
+        # print("self.should_divide_by_number_MEP_elements_in_space: ", self.should_divide_by_number_MEP_elements_in_space)
     
     
 
