@@ -12,6 +12,7 @@ clr.AddReference('PresentationFramework')
 clr.AddReference('System.Windows.Forms')
 #clr.AddReference('IronPython.Wpf')
 import sys
+import re
 
 
 
@@ -213,7 +214,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
 
         
 
-    def transfer_parameters(self, space_elem, MEP_instance, space_parameter_name, MEP_instance_parameter_name):
+    def transfer_parameters(self, space_elem, MEP_instance, space_parameter_name, MEP_instance_parameter_name, number_MEP_elems_in_space):
 
         if space_parameter_name is not None and MEP_instance_parameter_name is not None:
 
@@ -221,15 +222,21 @@ class ParameterPairsSelectionWindow(Windows.Window):
             MEP_parameter = MEP_instance.LookupParameter(MEP_instance_parameter_name)
 
             if (MEP_parameter is not None) and (space_parameter is not None):
-                
+
+                if number_MEP_elems_in_space > 1 and self.should_divide_by_number_MEP_elements_in_space:
+                    divided_space_parameter_as_value_string = self.divide_by_MEP_elements_number_if_possible(parameter_as_value_string=space_parameter.AsValueString(), MEP_elem_number_in_space=number_MEP_elems_in_space)
+                    MEP_parameter.Set(divided_space_parameter_as_value_string)
+                else:
                 # print("Transaction fire up: MEP instance param: {}; space param: {}".format(MEP_instance_parameter_name, space_parameter_name))
-                MEP_parameter.Set(space_parameter.AsValueString())
+                    MEP_parameter.Set(space_parameter.AsValueString())
                 
-                print("Transaction committed")
+                #print("Transaction committed")
             else:
-                print("MEP and/or space parameter do not exist")
+                pass
+                #print("MEP and/or space parameter do not exist")
         else:
-            print("Parameter not filled")
+            pass
+            #print("Parameter not filled")
 
 
 
@@ -242,10 +249,37 @@ class ParameterPairsSelectionWindow(Windows.Window):
 
         closed = False
 
+        print("In Progress ... ")
+
+
+
+
+
         try: 
+            
 
             for space_elem in self.spaces_elements:
+
+                MEP_elem_number_in_space = 0
+
+                list_MEP_instances_in_space = []
+
                 for MEP_instance in self.selected_family_instances_list:
+                    phase = list(doc.Phases)[-1]  # retrieve the last phase of the project
+                    # print("MEP Instance Space type: {}".format(type(MEP_instance.Space[phase])))
+                    
+                    # if MEP_instance.Space[phase] is not None:
+                    #     mep_location_space_id = MEP_instance.Space[phase].Id
+                    # else:
+                    #     mep_location_space_id = MEP_instance.Space.Id
+                    mep_location_point = MEP_instance.Location.Point
+                    #print("SPACE: ", space_elem)
+                    if space_elem.IsPointInSpace(mep_location_point):
+                        list_MEP_instances_in_space.append(MEP_instance)
+                        MEP_elem_number_in_space += 1
+
+
+                for MEP_instance in list_MEP_instances_in_space:
                     
                     phase = list(doc.Phases)[-1]  # retrieve the last phase of the project
                     # print("MEP Instance Space type: {}".format(type(MEP_instance.Space[phase])))
@@ -255,25 +289,28 @@ class ParameterPairsSelectionWindow(Windows.Window):
                     # else:
                     #     mep_location_space_id = MEP_instance.Space.Id
                     mep_location_point = MEP_instance.Location.Point
-                    print("SPACE: ", space_elem)
-                    if space_elem.IsPointInSpace(mep_location_point):
-                        counter_matches += 1
+                    #print("SPACE: ", space_elem)
+                  
 
-                        self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
-                                                space_parameter_name=self.selected_value_space_1, 
-                                                MEP_instance_parameter_name=self.selected_value_MEP_Instance_1)
-                        
-                        self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
-                                                space_parameter_name=self.selected_value_space_2, 
-                                                MEP_instance_parameter_name=self.selected_value_MEP_Instance_2)
-                        
-                        self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
-                                                space_parameter_name=self.selected_value_space_3, 
-                                                MEP_instance_parameter_name=self.selected_value_MEP_Instance_3)
-                        
-                        self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
-                                                space_parameter_name=self.selected_value_space_4, 
-                                                MEP_instance_parameter_name=self.selected_value_MEP_Instance_4)
+                    counter_matches += 1
+
+                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                            space_parameter_name=self.selected_value_space_1, 
+                                            MEP_instance_parameter_name=self.selected_value_MEP_Instance_1, number_MEP_elems_in_space=MEP_elem_number_in_space)
+                    
+                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                            space_parameter_name=self.selected_value_space_2, 
+                                            MEP_instance_parameter_name=self.selected_value_MEP_Instance_2, number_MEP_elems_in_space=MEP_elem_number_in_space)
+                    
+                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                            space_parameter_name=self.selected_value_space_3, 
+                                            MEP_instance_parameter_name=self.selected_value_MEP_Instance_3, number_MEP_elems_in_space=MEP_elem_number_in_space)
+                    
+                    self.transfer_parameters(space_elem=space_elem, MEP_instance=MEP_instance,
+                                            space_parameter_name=self.selected_value_space_4, 
+                                            MEP_instance_parameter_name=self.selected_value_MEP_Instance_4, number_MEP_elems_in_space=MEP_elem_number_in_space)
+        
+
         except Exception as error:
             print("ERROR: ", error)
             t.Commit()
@@ -283,8 +320,10 @@ class ParameterPairsSelectionWindow(Windows.Window):
         if not closed:
             t.Commit()
             self.Close()
+
+        print("Work done successfully!")
                     
-        print("Number of matches: {}". format(counter_matches))
+        print("Number of changed instances: {}". format(counter_matches))
         
         
         self.Close()
@@ -294,7 +333,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
         selected_item = self.combo_parameter_from_space_1.SelectedItem
         if selected_item:
             self.selected_value_space_1 = selected_item.Content
-            
+            # print(self.selected_value)
         else:
             print("No Item Selected")
     
@@ -302,7 +341,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
         selected_item = self.combo_parameter_from_space_2.SelectedItem
         if selected_item:
             self.selected_value_space_2 = selected_item.Content
-            print(self.selected_value)
+            # print(self.selected_value)
         else:
             print("No Item Selected")
 
@@ -310,7 +349,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
         selected_item = self.combo_parameter_from_space_3.SelectedItem
         if selected_item:
             self.selected_value_space_3 = selected_item.Content
-            print(self.selected_value)
+            # print(self.selected_value)
         else:
             print("No Item Selected")
     
@@ -318,7 +357,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
         selected_item = self.combo_parameter_from_space_4.SelectedItem
         if selected_item:
             self.selected_value_space_4 = selected_item.Content
-            print(self.selected_value)
+            # print(self.selected_value)
         else:
             print("No Item Selected")
 
@@ -327,7 +366,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
         selected_item = self.combo_param_to_1.SelectedItem
         if selected_item:
             self.selected_value_MEP_Instance_1 = selected_item.Content
-            print(self.selected_value)
+            # print(self.selected_value)
         else:
             print("No Item Selected")
 
@@ -335,7 +374,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
         selected_item = self.combo_param_to_2.SelectedItem
         if selected_item:
             self.selected_value_MEP_Instance_2 = selected_item.Content
-            print(self.selected_value)
+            # print(self.selected_value)
         else:
             print("No Item Selected")
 
@@ -343,7 +382,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
         selected_item = self.combo_param_to_3.SelectedItem
         if selected_item:
             self.selected_value_MEP_Instance_3 = selected_item.Content
-            print(self.selected_value)
+            # print(self.selected_value)
         else:
             print("No Item Selected")
 
@@ -351,7 +390,7 @@ class ParameterPairsSelectionWindow(Windows.Window):
         selected_item = self.combo_param_to_4.SelectedItem
         if selected_item:
             self.selected_value_MEP_Instance_4 = selected_item.Content
-            print(self.selected_value)
+            # print(self.selected_value)
         else:
             print("No Item Selected")
 
@@ -367,6 +406,48 @@ class ParameterPairsSelectionWindow(Windows.Window):
         self.should_divide_by_number_MEP_elements_in_space = False
 
         # print("self.should_divide_by_number_MEP_elements_in_space: ", self.should_divide_by_number_MEP_elements_in_space)
+    
+    def divide_by_MEP_elements_number_if_possible(self, parameter_as_value_string, MEP_elem_number_in_space):
+
+        re_pattern = r'\d+,\d+|\d+\.\d+|\d+'
+
+        numbers = re.findall(pattern=re_pattern, string=parameter_as_value_string)
+
+        print("Numbers recognized", numbers)
+
+        last_number_position = re.search(pattern=re_pattern, string=parameter_as_value_string).end()
+
+        string_part = parameter_as_value_string[last_number_position:]
+
+        # if numbers is defined, take only the first [0]th element because of possible numbers in the unit names like m2
+        # consider CheckBox' state
+        if numbers is not None and self.should_divide_by_number_MEP_elements_in_space:
+            number_part = numbers[0]
+            # check if the string is a correct number
+            if number_part.isnumeric():
+
+                float_number_part = float(number_part)
+                result_float_number_part = float_number_part / MEP_elem_number_in_space
+
+                # concatenate new number and string part
+                new_parameter_as_value_string = str(result_float_number_part) + string_part
+
+                return new_parameter_as_value_string
+            else:
+                return parameter_as_value_string
+        else:
+            return parameter_as_value_string
+        
+
+
+        
+            
+        
+        
+
+
+
+
     
     
 
