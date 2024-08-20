@@ -423,6 +423,8 @@ class ParameterPairsSelectionWindow(Windows.Window):
         # consider CheckBox' state
         if numbers is not None and self.should_divide_by_number_MEP_elements_in_space:
             number_part = numbers[0]
+            # if comma is used as decimal separator, replace it by a decimal point
+            number_part = number_part.replace(",", ".")
             # check if the string is a correct number
             if number_part.isnumeric():
 
