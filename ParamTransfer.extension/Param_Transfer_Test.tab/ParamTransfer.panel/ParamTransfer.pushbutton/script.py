@@ -6,8 +6,11 @@ import qa_engine
 import filemgr
 from qa_report import print_reports
 import clr
+
+clr.AddReference('PresentationCore')
+clr.AddReference('PresentationFramework')
 clr.AddReference('System.Windows.Forms')
-clr.AddReference('IronPython.wpf')
+#clr.AddReference('IronPython.Wpf')
 import sys
 
 
